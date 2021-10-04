@@ -5,7 +5,7 @@ export default function ContactsList({ contacts, onDeleteContacts }) {
     <ul className="contacts">
       {contacts.map(({ id, name, number }) => (
         <li key={id}>
-          {name}:{number}
+          {name} : {number}
           <button
             type="button"
             className="TodoList__btn"

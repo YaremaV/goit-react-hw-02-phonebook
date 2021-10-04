@@ -14,7 +14,6 @@ export default class Form extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    console.log(this.state);
 
     this.props.onSubmit(this.state.name, this.state.number);
     this.setState({ name: '', number: '' });
@@ -32,7 +31,6 @@ export default class Form extends Component {
     const { name, number } = this.state;
     return (
       <form onSubmit={this.handleSubmit}>
-        <h2>Phonebook</h2>
         <label>
           Name
           <input

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
+import ContactsList from './components/Contactslist/Contactslist';
+// import initialContacts from './contacts.json';
+import Form from './components/Form/Form';
 
 class App extends Component {
   static defaultProps = {};
@@ -8,34 +12,37 @@ class App extends Component {
 
   state = {
     contacts: [],
-    name: '',
-    number: '',
+    filter: '',
+  };
+
+  addContacts = (name, number) => {
+    const value = {
+      id: uuidv4(),
+      name,
+      number,
+    };
+    this.setState(prevState => ({
+      contacts: [value, ...prevState.contacts],
+    }));
+  };
+
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
   };
 
   render() {
     return (
-      <form>
-        <h2>Phonebook</h2>
-        <label>Name</label>
-        <input
-          type="text"
-          name="name"
-          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-          title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-          required
-        />
+      <>
+        <Form onSubmit={this.addContacts} />
 
-        <label>Number</label>
-        <input
-          type="tel"
-          name="number"
-          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-          required
+        <h2>Contacts</h2>
+        <ContactsList
+          contacts={this.state.contacts}
+          onDeleteContacts={this.deleteContact}
         />
-
-        <button type="submit">Add contact</button>
-      </form>
+      </>
     );
   }
 }

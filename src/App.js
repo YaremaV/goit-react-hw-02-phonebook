@@ -5,6 +5,7 @@ import ContactsList from './components/Contactslist/Contactslist';
 import initialContacts from './contacts.json';
 import Form from './components/Form/Form';
 import Filter from './components/Filter/Filter';
+import Layout from './components/Layout/Layout';
 
 class App extends Component {
   static defaultProps = {};
@@ -17,14 +18,16 @@ class App extends Component {
   };
 
   addContacts = (name, number) => {
+    const { contacts } = this.state;
     const value = {
       id: uuidv4(),
       name,
       number,
     };
-    this.setState(prevState => ({
-      contacts: [value, ...prevState.contacts],
-    }));
+
+    contacts.some(({ name }) => name.toLowerCase() === value.name.toLowerCase())
+      ? alert(`${name} is already in contacts`)
+      : this.setState(({ contacts }) => ({ contacts: [value, ...contacts] }));
   };
 
   deleteContact = contactId => {
@@ -37,24 +40,29 @@ class App extends Component {
     this.setState({ filter: e.currentTarget.value });
   };
 
-  render() {
+  getFilteredContacts = () => {
     const { contacts, filter } = this.state;
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase()),
+    const filterCase = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filterCase),
     );
+  };
+
+  render() {
+    const { filter } = this.state;
+    const filteredContacts = this.getFilteredContacts();
 
     return (
-      <>
-        <h2>Phonebook</h2>
+      <Layout>
         <Form onSubmit={this.addContacts} />
 
-        <h2>Contacts</h2>
         <Filter value={filter} onHandleFilter={this.changeFilter} />
+
         <ContactsList
           contacts={filteredContacts}
           onDeleteContacts={this.deleteContact}
         />
-      </>
+      </Layout>
     );
   }
 }

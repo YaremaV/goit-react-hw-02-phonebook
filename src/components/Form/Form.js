@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import s from './form.module.css';
 
 export default class Form extends Component {
   state = {
@@ -30,7 +31,8 @@ export default class Form extends Component {
   render() {
     const { name, number } = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form className={s.form} onSubmit={this.handleSubmit}>
+        <h2>Phonebook</h2>
         <label>
           Name
           <input
